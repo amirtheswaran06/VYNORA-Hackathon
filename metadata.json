@@ -1,0 +1,6 @@
+{
+  "name": "RouteLink - Smart Mobility & Logistics",
+  "description": "Low-cost, multilingual, offline-first Smart Mobility & Rural Logistics Platform connecting commercial drivers, fleet owners, farmers, and roadside assistance.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
