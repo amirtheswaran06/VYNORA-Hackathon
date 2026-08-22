@@ -74,6 +74,7 @@ export const DriverView: React.FC<DriverViewProps> = ({
   const [serviceFilter, setServiceFilter] = useState<string>('all');
   const [newMessageText, setNewMessageText] = useState('');
   const [newMsgCategory, setNewMsgCategory] = useState<'traffic_alert' | 'road_hazard' | 'dhaba_recommendation' | 'general_chat'>('traffic_alert');
+  const [showDriverProfile, setShowDriverProfile] = useState(false);
   
   // AI Highway Assistant state
   const [aiInput, setAiInput] = useState('');
@@ -144,6 +145,29 @@ export const DriverView: React.FC<DriverViewProps> = ({
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12 font-sans">
+      {/* DRIVER-ONLY OPERATIONS HEADER */}
+      <section className="rounded-3xl bg-[#0B1F3A] text-white p-5 sm:p-6 shadow-xl border border-[#FF9933]/20">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#138808] animate-pulse" />
+              <span className="text-[10px] uppercase tracking-[0.2em] font-black text-[#FF9933]">Commercial Driver Workspace</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black mt-2">Driver Operations Console</h2>
+            <p className="text-xs sm:text-sm text-slate-300 mt-1">Your trip, earnings, cargo, safety and highway assistance — in one place.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:w-64">
+            <div className="rounded-2xl bg-white/10 border border-white/10 p-3">
+              <span className="text-[9px] uppercase tracking-widest font-black text-slate-400 block">Vehicle</span>
+              <span className="text-sm font-black text-white">{driver.vehicleNumber}</span>
+            </div>
+            <div className="rounded-2xl bg-white/10 border border-white/10 p-3">
+              <span className="text-[9px] uppercase tracking-widest font-black text-slate-400 block">Rating</span>
+              <span className="text-sm font-black text-[#FF9933]">★ {driver.rating.toFixed(1)}</span>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Driver Interface Header Card */}
       <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
@@ -167,7 +191,16 @@ export const DriverView: React.FC<DriverViewProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => setShowDriverProfile(true)}
+              className="px-4 py-2.5 rounded-2xl bg-[#0B1F3A] text-white text-xs font-black uppercase tracking-wider hover:bg-[#1A365D] transition active:scale-95 shadow-md flex items-center gap-2 cursor-pointer"
+            >
+              <UserCheck className="w-4 h-4 text-[#FF9933]" />
+              View Profile
+            </button>
+
             <div className="bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-200 text-center flex-1 sm:flex-initial">
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">Available Cargo</span>
               <span className="text-lg font-black text-[#138808]">{driver.availableCapacityTons} TONS</span>
@@ -195,6 +228,81 @@ export const DriverView: React.FC<DriverViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* DRIVER PERFORMANCE — EARNINGS & SAFETY */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Earnings */}
+        <div className="rounded-3xl bg-white border border-slate-200 p-5 shadow-sm hover:shadow-md transition-all duration-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.18em] font-black text-slate-400">Driver Earnings</p>
+              <h3 className="text-2xl font-black text-[#0B1F3A] mt-1">₹18,450</h3>
+              <p className="text-xs text-slate-500 font-semibold mt-1">This month</p>
+            </div>
+            <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-[#138808] flex items-center justify-center">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mt-5">
+            <div className="rounded-2xl bg-slate-50 border border-slate-200 p-3">
+              <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Trips</span>
+              <span className="text-lg font-black text-[#0B1F3A] block mt-1">126</span>
+              <span className="text-[10px] text-slate-500 font-semibold">Completed</span>
+            </div>
+            <div className="rounded-2xl bg-slate-50 border border-slate-200 p-3">
+              <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Avg / Trip</span>
+              <span className="text-lg font-black text-[#0B1F3A] block mt-1">₹1,465</span>
+              <span className="text-[10px] text-slate-500 font-semibold">Estimated</span>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">
+              <span>Monthly target</span>
+              <span>₹18.45K / ₹25K</span>
+            </div>
+            <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden">
+              <div className="h-full rounded-full bg-[#138808] transition-all duration-700" style={{ width: '74%' }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Safety */}
+        <div className="rounded-3xl bg-[#0B1F3A] text-white border border-[#0B1F3A] p-5 shadow-sm hover:shadow-md transition-all duration-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.18em] font-black text-slate-400">Driver Safety</p>
+              <h3 className="text-2xl font-black text-white mt-1">94 / 100</h3>
+              <p className="text-xs text-emerald-300 font-black mt-1 uppercase tracking-wider">Excellent</p>
+            </div>
+            <div className="w-11 h-11 rounded-2xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center">
+              <ShieldAlert className="w-5 h-5" />
+            </div>
+          </div>
+
+          <div className="mt-5">
+            <div className="h-3 rounded-full bg-white/10 overflow-hidden">
+              <div className="h-full rounded-full bg-[#138808] transition-all duration-700" style={{ width: '94%' }} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 mt-5">
+            <div className="rounded-2xl bg-white/5 border border-white/10 p-3">
+              <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Safe Trips</span>
+              <span className="text-lg font-black block mt-1">121</span>
+            </div>
+            <div className="rounded-2xl bg-white/5 border border-white/10 p-3">
+              <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Incidents</span>
+              <span className="text-lg font-black block mt-1">02</span>
+            </div>
+            <div className="rounded-2xl bg-white/5 border border-white/10 p-3">
+              <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Rating</span>
+              <span className="text-lg font-black block mt-1">★ {driver.rating.toFixed(1)}</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* EMERGENCY SOS HIGH-CONTRAST TRIGGER CARD */}
       {!activeSOS ? (
@@ -651,6 +759,103 @@ export const DriverView: React.FC<DriverViewProps> = ({
           </button>
         </form>
       </div>
+
+      {/* DRIVER PROFILE MODAL */}
+      {showDriverProfile && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200">
+            <div className="bg-[#0B1F3A] text-white p-6 rounded-t-3xl">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-white text-[#0B1F3A] flex items-center justify-center text-xl font-black border-2 border-[#FF9933]">
+                    {driver.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.2em] font-black text-[#FF9933]">
+                      Commercial Driver Profile
+                    </p>
+                    <h3 className="text-2xl font-black mt-1">{driver.name}</h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      {driver.vehicleNumber} • {driver.vehicleModel}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowDriverProfile(false)}
+                  className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-white font-black transition cursor-pointer"
+                  aria-label="Close profile"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Rating</span>
+                  <span className="text-xl font-black text-[#FF9933] mt-1 block">★ {driver.rating.toFixed(1)}</span>
+                </div>
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Capacity</span>
+                  <span className="text-xl font-black text-[#138808] mt-1 block">{driver.availableCapacityTons} T</span>
+                </div>
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Status</span>
+                  <span className="text-sm font-black text-[#138808] mt-2 block">● ONLINE</span>
+                </div>
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Language</span>
+                  <span className="text-sm font-black text-[#0B1F3A] mt-2 block">{driver.language}</span>
+                </div>
+              </div>
+
+              <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="rounded-2xl border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Phone</span>
+                  <p className="font-black text-[#0B1F3A] mt-1">{driver.phone}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{driver.phoneType}</p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Fleet Owner</span>
+                  <p className="font-black text-[#0B1F3A] mt-1">{driver.fleetOwnerName}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Assigned fleet</p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 p-4 sm:col-span-2">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Current Route</span>
+                  <p className="font-black text-[#0B1F3A] mt-1">
+                    {driver.currentRoute.origin} → {driver.currentRoute.destination}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {driver.currentRoute.highway} • ETA {driver.currentRoute.eta} • {driver.currentRoute.distanceKm} KM
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-col sm:flex-row gap-2">
+                <a
+                  href={`tel:${driver.phone}`}
+                  className="flex-1 bg-[#138808] hover:bg-[#0F6B06] text-white text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl transition flex items-center justify-center gap-2"
+                >
+                  <Phone className="w-4 h-4" />
+                  Contact Driver
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setShowDriverProfile(false)}
+                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl transition cursor-pointer"
+                >
+                  Close Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* SOS EMERGENCY CONFIRMATION MODAL */}
       {showSOSModal && (

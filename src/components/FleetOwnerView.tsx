@@ -43,6 +43,7 @@ export const FleetOwnerView: React.FC<FleetOwnerViewProps> = ({
   const [newModel, setNewModel] = useState('');
   const [newDriverName, setNewDriverName] = useState('');
   const [newDriverPhone, setNewDriverPhone] = useState('');
+  const [selectedDriverVehicle, setSelectedDriverVehicle] = useState<Vehicle | null>(null);
 
   const activeVehicles = vehicles.filter(v => v.status === 'active' || v.status === 'moving').length;
   const idleVehicles = vehicles.filter(v => v.status === 'available_capacity' || v.status === 'stopped').length;
@@ -179,6 +180,145 @@ export const FleetOwnerView: React.FC<FleetOwnerViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* FLEET FINANCIAL OVERVIEW — OWNER ONLY */}
+      <section className="rounded-3xl bg-[#0B1F3A] text-white p-6 shadow-xl border border-white/10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.2em] font-black text-[#FF9933]">Fleet Finance</p>
+            <h3 className="text-xl font-black mt-1">Fleet Financial Overview</h3>
+            <p className="text-xs text-slate-400 mt-1">Owner-level revenue, driver payouts and operating profit.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => window.alert('Fleet financial report is ready for review.')}
+            className="bg-white/10 hover:bg-white/15 border border-white/10 text-white text-xs font-black uppercase tracking-wider px-4 py-2.5 rounded-xl transition cursor-pointer"
+          >
+            View Financial Report
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+            <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Fleet Revenue</span>
+            <span className="text-2xl font-black mt-1 block">₹8.42 L</span>
+            <span className="text-[10px] text-emerald-300 font-bold">+12.4% this month</span>
+          </div>
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+            <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Driver Payout</span>
+            <span className="text-2xl font-black mt-1 block">₹3.18 L</span>
+            <span className="text-[10px] text-slate-400 font-bold">126 trips</span>
+          </div>
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+            <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Operating Cost</span>
+            <span className="text-2xl font-black mt-1 block">₹2.50 L</span>
+            <span className="text-[10px] text-slate-400 font-bold">Fuel + maintenance</span>
+          </div>
+          <div className="rounded-2xl bg-[#138808]/20 border border-[#138808]/30 p-4">
+            <span className="text-[10px] uppercase tracking-widest font-black text-emerald-300 block">Net Profit</span>
+            <span className="text-2xl font-black mt-1 block">₹2.74 L</span>
+            <span className="text-[10px] text-emerald-300 font-bold">32.5% margin</span>
+          </div>
+        </div>
+
+        <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Revenue Target</span>
+              <span className="text-xs font-black">84%</span>
+            </div>
+            <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
+              <div className="h-full w-[84%] rounded-full bg-[#FF9933] transition-all duration-700" />
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Driver Payment Status</span>
+              <span className="text-xs font-black text-emerald-300">ON TRACK</span>
+            </div>
+            <p className="text-xs text-slate-300 font-semibold">
+              ₹2.74 L expected payout cycle • 3 drivers pending settlement
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* DRIVER MANAGEMENT — OWNER ONLY */}
+      <section className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.2em] font-black text-[#FF9933]">Fleet Operations</p>
+            <h3 className="text-xl font-black text-[#0B1F3A] mt-1">Driver Management</h3>
+            <p className="text-xs text-slate-500 mt-1">Monitor drivers, assignments and performance from one place.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => window.alert('Add Driver workflow can be connected to your backend next.')}
+            className="bg-[#0B1F3A] hover:bg-[#1A365D] text-white text-xs font-black uppercase tracking-wider px-4 py-2.5 rounded-xl transition cursor-pointer"
+          >
+            + Add Driver
+          </button>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+          {vehicles.slice(0, 6).map((veh) => (
+            <div key={`driver-${veh.id}`} className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 hover:bg-white hover:shadow-md transition">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-11 h-11 rounded-xl bg-[#0B1F3A] text-white flex items-center justify-center font-black">
+                    {veh.assignedDriverName.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-black text-[#0B1F3A] truncate">{veh.assignedDriverName}</p>
+                    <p className="text-[11px] text-slate-500 font-medium">{veh.vehicleNumber} • {veh.model}</p>
+                  </div>
+                </div>
+                <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-lg ${
+                  veh.status === 'moving' || veh.status === 'active'
+                    ? 'bg-emerald-50 text-[#138808] border border-emerald-200'
+                    : veh.status === 'breakdown'
+                    ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                    : 'bg-slate-200 text-slate-700'
+                }`}>
+                  {veh.status === 'moving' || veh.status === 'active' ? 'ON DUTY' : veh.status.replace('_', ' ')}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 mt-4 text-center">
+                <div className="rounded-xl bg-white border border-slate-200 p-2.5">
+                  <span className="text-[9px] uppercase tracking-widest font-black text-slate-400 block">Rating</span>
+                  <span className="text-sm font-black text-[#FF9933] block mt-1">★ 4.8</span>
+                </div>
+                <div className="rounded-xl bg-white border border-slate-200 p-2.5">
+                  <span className="text-[9px] uppercase tracking-widest font-black text-slate-400 block">Safety</span>
+                  <span className="text-sm font-black text-[#138808] block mt-1">94%</span>
+                </div>
+                <div className="rounded-xl bg-white border border-slate-200 p-2.5">
+                  <span className="text-[9px] uppercase tracking-widest font-black text-slate-400 block">Trips</span>
+                  <span className="text-sm font-black text-[#0B1F3A] block mt-1">126</span>
+                </div>
+              </div>
+
+              <div className="mt-3 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedDriverVehicle(veh)}
+                  className="flex-1 bg-[#0B1F3A] text-white text-[10px] font-black uppercase tracking-wider py-2.5 rounded-xl hover:bg-[#1A365D] transition cursor-pointer"
+                >
+                  View Profile
+                </button>
+                <a
+                  href={`tel:${veh.driverPhone}`}
+                  className="flex-1 bg-white border border-slate-200 text-[#0B1F3A] text-[10px] font-black uppercase tracking-wider py-2.5 rounded-xl hover:bg-slate-50 transition text-center"
+                >
+                  Contact
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Capacity Monetization & Empty Load Backhauls Panel */}
       <div className="bg-[#0B1F3A] text-white rounded-3xl p-6 shadow-xl border border-white/10">
@@ -323,6 +463,153 @@ export const FleetOwnerView: React.FC<FleetOwnerViewProps> = ({
           })}
         </div>
       </div>
+
+      {/* DRIVER MANAGEMENT PROFILE MODAL */}
+      {selectedDriverVehicle && (
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200">
+            <div className="bg-[#0B1F3A] text-white p-6 rounded-t-3xl">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-white text-[#0B1F3A] flex items-center justify-center font-black text-lg border-2 border-[#FF9933]">
+                    {selectedDriverVehicle.assignedDriverName
+                      .split(' ')
+                      .map(n => n[0])
+                      .slice(0, 2)
+                      .join('')
+                      .toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.2em] font-black text-[#FF9933]">
+                      Fleet Driver Profile
+                    </p>
+                    <h3 className="text-2xl font-black mt-1">
+                      {selectedDriverVehicle.assignedDriverName}
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-1">
+                      {selectedDriverVehicle.vehicleNumber} • {selectedDriverVehicle.model}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedDriverVehicle(null)}
+                  className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-white font-black transition cursor-pointer"
+                  aria-label="Close driver profile"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest font-black text-slate-400">Driver Status</p>
+                  <p className="text-lg font-black text-[#138808] mt-1">
+                    {selectedDriverVehicle.status === 'moving' || selectedDriverVehicle.status === 'active'
+                      ? '● ON DUTY'
+                      : selectedDriverVehicle.status.replace('_', ' ').toUpperCase()}
+                  </p>
+                </div>
+                <Activity className="w-6 h-6 text-[#138808]" />
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Rating</span>
+                  <span className="text-xl font-black text-[#FF9933] block mt-1">★ 4.8</span>
+                </div>
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Safety</span>
+                  <span className="text-xl font-black text-[#138808] block mt-1">94%</span>
+                </div>
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Trips</span>
+                  <span className="text-xl font-black text-[#0B1F3A] block mt-1">126</span>
+                </div>
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400 block">Capacity</span>
+                  <span className="text-xl font-black text-[#0B1F3A] block mt-1">{selectedDriverVehicle.capacityAvailableTons}T</span>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="rounded-2xl border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Phone</span>
+                  <p className="font-black text-[#0B1F3A] mt-1">{selectedDriverVehicle.driverPhone}</p>
+                  <a
+                    href={`tel:${selectedDriverVehicle.driverPhone}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-black text-[#138808] mt-2"
+                  >
+                    <Phone className="w-3.5 h-3.5" />
+                    Call Driver
+                  </a>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 p-4">
+                  <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Current Route</span>
+                  <p className="font-black text-[#0B1F3A] mt-1">
+                    {selectedDriverVehicle.currentRoute.origin} → {selectedDriverVehicle.currentRoute.destination}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {selectedDriverVehicle.currentRoute.viaHighway} • ETA {selectedDriverVehicle.currentRoute.estimatedArrival}
+                  </p>
+                </div>
+              </div>
+
+              {/* Assign / Reassign Vehicle */}
+              <div className="mt-5 rounded-2xl border border-slate-200 p-4">
+                <div className="flex items-center gap-2">
+                  <Truck className="w-4 h-4 text-[#FF9933]" />
+                  <h4 className="text-sm font-black text-[#0B1F3A]">Assign / Reassign Vehicle</h4>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Select another vehicle to update this driver's assignment.
+                </p>
+
+                <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                  <select
+                    defaultValue={selectedDriverVehicle.id}
+                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-[#0B1F3A]"
+                  >
+                    {vehicles.map(v => (
+                      <option key={v.id} value={v.id}>
+                        {v.vehicleNumber} — {v.model}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => window.alert(`Vehicle assignment saved for ${selectedDriverVehicle.assignedDriverName}.`)}
+                    className="bg-[#0B1F3A] hover:bg-[#1A365D] text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition cursor-pointer"
+                  >
+                    Save Assignment
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-5 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => window.alert(`Driver ${selectedDriverVehicle.assignedDriverName} marked for performance review.`)}
+                  className="flex-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-black uppercase tracking-wider py-3 rounded-xl transition cursor-pointer"
+                >
+                  Performance Review
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDriverVehicle(null)}
+                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black uppercase tracking-wider py-3 rounded-xl transition cursor-pointer"
+                >
+                  Close Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* REGISTER NEW VEHICLE MODAL */}
       {showAddModal && (
