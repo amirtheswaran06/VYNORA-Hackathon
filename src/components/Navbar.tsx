@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import garudaLogo from "../assets/garuda-logo.png";
 import {
   Truck,
   Building2,
