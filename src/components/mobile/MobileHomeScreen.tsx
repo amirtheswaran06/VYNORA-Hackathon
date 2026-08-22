@@ -349,31 +349,6 @@ export const MobileHomeScreen: React.FC<MobileHomeScreenProps> = ({
           ))}
         </div>
       </div>
-
-      {/* Floating Saffron Thumb-Reachable SOS Emergency Trigger */}
-      <div className="fixed bottom-20 left-4 right-4 z-40 max-w-md mx-auto">
-        <button
-          onClick={onTriggerSOS}
-          className="w-full bg-[#FF9933] hover:bg-[#E68A2E] text-[#0B1F3A] font-black text-sm uppercase tracking-wider py-4 px-5 rounded-2xl shadow-2xl transition-all duration-200 active:scale-95 flex items-center justify-between border-2 border-white/80 cursor-pointer min-h-[56px]"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#0B1F3A] text-[#FF9933] flex items-center justify-center font-black animate-pulse">
-              <ShieldAlert className="w-5 h-5 text-[#FF9933]" />
-            </div>
-            <div className="text-left">
-              <span className="font-black text-base text-[#0B1F3A] block leading-tight">
-                ONE-TAP EMERGENCY SOS
-              </span>
-              <span className="text-[10px] font-bold text-slate-900 block">
-                Alerts 14 Nearby Lorries & Kaveri Crane Towing
-              </span>
-            </div>
-          </div>
-          <span className="bg-[#0B1F3A] text-white text-[11px] font-black px-3 py-1.5 rounded-xl shadow-xs">
-            HELP ME
-          </span>
-        </button>
-      </div>
     </div>
   );
 };
